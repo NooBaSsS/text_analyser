@@ -13,11 +13,8 @@ class Text_analyser:
         text = open(self.text, 'r', encoding=self.encoding)
         print(text.read())
     def print_file(self):
-        pass
-        '''
         text = open(self.text, 'r', encoding=self.encoding)
         print(text.read())
-        '''
         
 
 test = Text_analyser('text.txt', 'UTF-8')
