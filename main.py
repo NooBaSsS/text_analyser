@@ -12,7 +12,7 @@ class Text_analyser:
         self.encoding = encoding
     def read_file(self):
         text = open(self.text, 'r', encoding=self.encoding)
-        print(text = content.read())
+        print(text.read())
 
 test = Text_analyser('text.txt', 'UTF-8')
 test.read_file()
