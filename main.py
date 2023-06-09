@@ -7,23 +7,28 @@ class TextAnalyser:
         self.text = file_path
         self.encoding = encoding
         self.open_file(file_path)
-        self.print_file(file_path)
+        self.check_file(file_path)
+        self.prepare_text()
+        self.print_file()
 
     def open_file(self, file_path):
         try:
             with open(self.text, 'r', encoding=self.encoding) as text:
                 self.text = text
                 self.text = self.text.read()
-                self.text = self.text.lower()
         except FileNotFoundError:
             raise Exception(f'Файл "{file_path}" не найден')
 
-    def print_file(self, file_path):
+    def check_file(self, file_path):
         if not self.text:
             raise Exception(f'Файл "{file_path}" пустой')
-        else:
-            print(self.text)
+
+    def prepare_text(self):
+        self.text = self.text.lower()
+
+    def print_file(self):
+        print(self.text)
     
         
 
-test = TextAnalyser(file_path='empty.txt', encoding='UTF-8')
+test = TextAnalyser(file_path='text.txt', encoding='UTF-8')
