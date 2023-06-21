@@ -1,6 +1,7 @@
 # TODO разобрать строки на отдельные слова
 from typing import NoReturn
 from string import punctuation
+import re
 punctuation += '—'
 
 
@@ -25,18 +26,17 @@ class TextAnalyser:
 
     def prepare_text(self) -> None:
         self.text = self.text.lower()
-        for letter in self.text:
-            if letter in punctuation:
-                translator = str.maketrans('', '', punctuation)
-                self.text = self.text.translate(translator)
-        self.words_clean = self.text.split()
+        for char in punctuation.replace('-', '-'):
+            self.text = self.text.replace(char, '')
+        self.words = re.findall(r'\w+', self.text)
 
     def check_empty(self, file_path) -> None | NoReturn:
         if not self.text:
             raise RuntimeError(f'Файл "{file_path}" пустой')
 
     def print_file(self) -> None:
-        print(self.words_clean)
+        print(self.words)
+        print(f'длина {len(self.words)} слов')
 
 
 test = TextAnalyser(file_path='text.txt', encoding='UTF-8')
