@@ -1,4 +1,3 @@
-# TODO разобрать строки на отдельные слова
 from typing import NoReturn
 from string import punctuation
 import re
