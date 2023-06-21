@@ -25,9 +25,7 @@ class TextAnalyser:
 
     def prepare_text(self) -> None:
         self.text = self.text.lower()
-        for char in punctuation.replace('-', '-'):
-            self.text = self.text.replace(char, '')
-        self.words = re.findall(r'\w+', self.text)
+        self.words = re.findall(r'\w+[\w-]*\w+', self.text)
 
     def check_empty(self, file_path) -> None | NoReturn:
         if not self.text:
