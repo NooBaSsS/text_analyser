@@ -1,7 +1,6 @@
 from typing import NoReturn
-from string import punctuation
 import re
-punctuation += '—'
+import pymorphy3
 
 
 class TextAnalyser:
@@ -14,6 +13,7 @@ class TextAnalyser:
         self.check_empty(file_path)
         self.prepare_text()
         self.print_file()
+        self.make_analysed_words('NOUN')
 
     def open_file(self, file_path) -> None | NoReturn:
         try:
@@ -34,6 +34,26 @@ class TextAnalyser:
     def print_file(self) -> None:
         print(self.words)
         print(f'длина {len(self.words)} слов')
+
+    def make_analysed_words(self, pos=['VERB']) -> None:
+        result = []
+        morph = pymorphy3.MorphAnalyzer()
+        for word in self.words:
+            parse = morph.parse(word)[0]
+            if parse.tag.POS == pos:
+                result.append(word)
+        print(result)
+
+        '''
+        self.parsed_word = self.parse[0]
+        self.part_of_speech = self.parsed_word.tag.POS
+        print('Обозначение части речи:', self.part_of_speech)
+
+        for word in self.words:
+            self.parse = self.morph.parse(word)
+            if word.parse[0].tag.POS == pos:
+                print(word)
+        '''
 
 
 test = TextAnalyser(file_path='text.txt', encoding='UTF-8')
