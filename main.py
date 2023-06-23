@@ -1,6 +1,19 @@
 from typing import NoReturn
 import re
 import pymorphy3
+all_pos = [
+    'NOUN',
+    'ADJF',
+    'ADJS',
+    'VERB',
+    'ADVB',
+    'NPRO',
+    'NUMR',
+    'PREP',
+    'CONJ',
+    'PRCL',
+    'INTJ',
+]
 
 
 class TextAnalyser:
@@ -12,8 +25,8 @@ class TextAnalyser:
         self.open_file(file_path)
         self.check_empty(file_path)
         self.prepare_text()
+        self.make_analysed_words('')
         self.print_file()
-        self.make_analysed_words('NOUN')
 
     def open_file(self, file_path) -> None | NoReturn:
         try:
@@ -33,16 +46,20 @@ class TextAnalyser:
 
     def print_file(self) -> None:
         print(self.words)
+        print(self.result)
         print(f'длина {len(self.words)} слов')
 
     def make_analysed_words(self, pos=['VERB']) -> None:
-        result = []
+        if not self.words:
+            raise Exception('Текста нет')
+        if pos not in all_pos:
+            raise Exception('Неправильная часть речи')
+        self.result = []
         morph = pymorphy3.MorphAnalyzer()
         for word in self.words:
             parse = morph.parse(word)[0]
             if parse.tag.POS == pos:
-                result.append(word)
-        print(result)
+                self.result.append(morph.parse(word)[0].normal_form)
 
         '''
         self.parsed_word = self.parse[0]
