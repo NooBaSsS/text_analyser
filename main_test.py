@@ -8,7 +8,7 @@ class TextAnalyser:
                  file_path=None,
                  mode='r',
                  encoding='UTF-8',
-                 pos=['NOUN'],
+                 pos=['NOUN', None, None, None],
                  ) -> None:
         if file_path is None:
             raise Exception('Файл не указан')
@@ -37,15 +37,13 @@ class TextAnalyser:
             raise RuntimeError(f'Файл "{file_path}" пустой')
 
     def print_results(self) -> None:
-        print(self.words)
         print(self.result)
         for i, result in enumerate(self.additional_results):
             if result:
                 print(f'{i+1}-я часть речи: {result}')
-        print(f'длина {len(self.words)} слов')
 
     def make_analysed_words(self,
-                            pos=['NOUN'],
+                            pos=['NOUN', None, None, None],
                             ) -> None:
         if not self.words:
             raise Exception('Текста нет')
