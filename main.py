@@ -79,25 +79,6 @@ class TextAnalyser:
         self.result_2 = []
         self.result_3 = []
         morph = pymorphy3.MorphAnalyzer()
-        '''for word in self.words:
-            parse = morph.parse(word)[0]
-            if parse.tag.POS == pos:
-                self.result.append(morph.parse(word)[0].normal_form)
-
-        for word in self.words:
-            parse = morph.parse(word)[0]
-            if parse.tag.POS == pos_1:
-                self.result_1.append(morph.parse(word)[0].normal_form)
-
-        for word in self.words:
-            parse = morph.parse(word)[0]
-            if parse.tag.POS == pos_2:
-                self.result_2.append(morph.parse(word)[0].normal_form)
-
-        for word in self.words:
-            parse = morph.parse(word)[0]
-            if parse.tag.POS == pos_3:
-                self.result_3.append(morph.parse(word)[0].normal_form)'''
 
         for word in self.words:
             parse = morph.parse(word)[0]
