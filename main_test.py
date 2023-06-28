@@ -3,7 +3,7 @@ import re
 import pymorphy3
 from collections import Counter
 from PIL import Image
-from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+from wordcloud import WordCloud, STOPWORDS
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -17,6 +17,8 @@ class TextAnalyser:
                  contour_color='black',
                  bgc='white',
                  contour_width=3,
+                 max_words=500,
+                 figsize=[10, 7]
                  ) -> None:
         if file_path is None:
             raise Exception('Файл не указан')
@@ -29,6 +31,8 @@ class TextAnalyser:
         self.make_wordcloud(contour_color=contour_color,
                             bgc=bgc,
                             contour_width=contour_width,
+                            max_words=max_words,
+                            figsize=figsize
                             )
         self.print_results()
 
@@ -87,20 +91,35 @@ class TextAnalyser:
     def make_wordcloud(self,
                        contour_color='black',
                        bgc='white',
-                       contour_width=3
+                       contour_width=3,
+                       max_words=500,
+                       figsize=[10, 7],
                        ):
         wc = WordCloud(
             background_color=bgc,
-            max_words=1000,
+            max_words=max_words,
             mask=self.mask,
             stopwords=set(STOPWORDS),
             contour_width=contour_width,
             contour_color=contour_color
         )
         wc.generate(' '.join(self.words))
-        image_colors = ImageColorGenerator(self.mask)
-        plt.figure(figsize=[10, 7])
-        plt.imshow(wc.recolor(color_func=image_colors),
+        num_colors = len(wc.words_)
+        rand_cmap = plt.cm.get_cmap('hsv', num_colors)
+
+        def random_color_func(word=None,
+                              font_size=None,
+                              position=None,
+                              orientation=None,
+                              font_path=None,
+                              random_state=None
+                              ):
+            return tuple(int(x * 255) for x in rand_cmap(
+                np.random.randint(num_colors)
+            ))
+
+        plt.figure(figsize=figsize)
+        plt.imshow(wc.recolor(color_func=random_color_func),
                    interpolation='bilinear')
         plt.axis('off')
         plt.savefig('wordcloud.png', format='PNG')
