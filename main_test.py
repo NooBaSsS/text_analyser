@@ -14,6 +14,9 @@ class TextAnalyser:
                  mode='r',
                  encoding='UTF-8',
                  pos=['NOUN', None, None, None],
+                 contour_color='black',
+                 bgc='white',
+                 contour_width=3,
                  ) -> None:
         if file_path is None:
             raise Exception('Файл не указан')
@@ -23,7 +26,10 @@ class TextAnalyser:
         self.check_empty(file_path)
         self.prepare_text()
         self.make_analysed_words(pos)
-        self.make_wordcloud()
+        self.make_wordcloud(contour_color=contour_color,
+                            bgc=bgc,
+                            contour_width=contour_width,
+                            )
         self.print_results()
 
     def open_file(self, file_path) -> None | NoReturn:
@@ -33,6 +39,7 @@ class TextAnalyser:
                 self.text = self.text.read()
         except FileNotFoundError:
             raise Exception(f'Файл "{file_path}" не найден')
+        self.mask = np.array(Image.open('mask.jpg'))
 
     def prepare_text(self) -> None:
         self.text = self.text.lower()
@@ -77,23 +84,26 @@ class TextAnalyser:
                             morph.parse(word)[0].normal_form
                         )
 
-    def make_wordcloud(self):
-        mask = np.array(Image.open('mask.jpg'))
+    def make_wordcloud(self,
+                       contour_color='black',
+                       bgc='white',
+                       contour_width=3
+                       ):
         wc = WordCloud(
-            background_color='white',
+            background_color=bgc,
             max_words=1000,
-            mask=mask,
+            mask=self.mask,
             stopwords=set(STOPWORDS),
-            contour_width=3,
-            contour_color='steelblue'
+            contour_width=contour_width,
+            contour_color=contour_color
         )
         wc.generate(' '.join(self.words))
-        image_colors = ImageColorGenerator(mask)
+        image_colors = ImageColorGenerator(self.mask)
         plt.figure(figsize=[10, 10])
         plt.imshow(wc.recolor(color_func=image_colors),
                    interpolation='bilinear')
         plt.axis('off')
-        result = Image.fromarray(mask)
+        result = Image.fromarray(self.mask)
         plt.show()
         result.save('wordcloud.png', format='PNG')
 
@@ -101,4 +111,7 @@ class TextAnalyser:
 test = TextAnalyser(file_path='text.txt',
                     encoding='UTF-8',
                     pos=['VERB', 'ADJF', 'NOUN', 'ADVB'],
+                    contour_color='black',
+                    bgc='white',
+                    contour_width=3,
                     )
