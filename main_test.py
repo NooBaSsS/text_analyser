@@ -99,13 +99,12 @@ class TextAnalyser:
         )
         wc.generate(' '.join(self.words))
         image_colors = ImageColorGenerator(self.mask)
-        plt.figure(figsize=[10, 10])
+        plt.figure(figsize=[10, 7])
         plt.imshow(wc.recolor(color_func=image_colors),
                    interpolation='bilinear')
         plt.axis('off')
-        result = Image.fromarray(self.mask)
+        plt.savefig('wordcloud.png', format='PNG')
         plt.show()
-        result.save('wordcloud.png', format='PNG')
 
 
 test = TextAnalyser(file_path='text.txt',
